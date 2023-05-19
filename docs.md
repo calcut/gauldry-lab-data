@@ -64,8 +64,9 @@ documented online, so a motivated researcher should be able to pick it up.
 
 ## Architecture - Anatomy of a system
 
-This chapter breaks down a typical system into key components, and discusses the
-design choices a developer might make when getting started.
+This chapter breaks down a typical system into key components. It discusses the
+design options a developer might evaluate, leading to recommended choices for an
+example system.
 
 ### Microcontroller
 
@@ -89,8 +90,9 @@ following families of microcontrollers a good starting place:
 | STM32  | Low power                 | [Blues Wireless Swan](https://blues.io/products/swan/)                       |
 | RP2040 | Low cost                  | [Raspberry Pi Pico](https://www.raspberrypi.com/products/raspberry-pi-pico/) |
 
-They all allow programming frameworks like Arduino and Circuitpython, which are
-discussed in the following section.
+They all enable programming frameworks like Arduino and Circuitpython, which are
+discussed in the Language section. There are some networking differences
+detailed in the Networking section
 
 Board examples have been provided, but other form factors are available, e.g.
 including a display, exposing more pin connections or with physical
@@ -177,15 +179,110 @@ There are many pitfalls with getting MCUs connected to the internet,
 particularly if they need to run unattended for extended periods of time.
 
 While wifi has become ubiquitous, there are inherent difficulties, e.g
-Institutional wifi networks like eduroam may require certificates, and saving an
-individual's username and password in the MCU code is bad practice for security and because it may change.
+institutional wifi networks like eduroam may require certificates, and saving an
+individual's username and password in the MCU code is bad practice for security
+and because it may change.
 
-Similarly, mobile networking with 4G/LTE typically requires SIM cards, monthly payments and
-choosing a suitable provider with the right coverage.
+Similarly, mobile networking with 4G/LTE typically requires SIM cards, monthly
+payments and choosing a suitable provider with the right coverage.
 
-The requirement to have code to monitor the connection for errors and manage reconnections compounds the problem.
+The requirement to have code to sensibly handle any errors and manage
+reconnections compounds the problem.
 
-For these reasons it is worth using a specialist networking card like a [Blues Wireless Notecard](https://blues.io/) wherever possible.
+These issues can be largely avoided by using a specialist networking card like a
+[Blues Wireless Notecard](https://blues.io/). This fits the theme of using
+existing solutions where possible. It uses mobile data, although a wifi version
+is available too.
+
+Notecard Pros
+
+* Data plan and integrated SIM all included in the hardware price. No separate
+  contracts to manage.
+  
+* Notecards uses their own independent MCU to manage the connection and queue
+  data. This means the primary "host" MCU doesn't need any networking software
+  and is free to manage the rest of the system. This can greatly help with
+  timing and responsiveness.
+
+* The Blues Notehub dashboard enables administration of multiple devices.
+  Notecards connect to this via a VPN so they are not visible to the open
+  internet, which is ideal for security.
+
+* A hierarchy of "environment variables" allows custom settings for
+  different devices in a fleet. e.g. to adjust a target temperatures in a
+  heating system.
+
+* An "Outboard Device Firmware Update" feature allows the host MCU to be
+  easily reprogrammed remotely. The Notecard acts like an attached PC to flash
+  the MCU. This greatly reduces the complexity of remote firmware updates and
+  the risk of rendering the system inoperable.
+
+* Designed for low power operation, requires almost no current (8uA) during
+  periods between network synchronisations.
+
+* Technical support is readily available.
+
+Notecard Cons
+
+* Notehub doesn't offer any plotting facilities, data must be forwarded
+  ("routed") to another service for longer term storage and visualisation.
+
+* It is best suited to applications with low data requirements, e.g. sending
+  kilobytes per day, not megabytes. So it doesn't handle audio, video or
+  images well.
+
+* Communication between the host MCU and the Notecard typically uses the I2C
+  protocol. Certain operations can be relatively slow (~100 milliseconds) which
+  can impact the responsiveness of the host MCU.
+
+* Mobile network coverage is required, although it is possible to use
+  external directional antennas to increase the range.
+
+Alternatives
+
+If higher data rates are needed, consider a 4G-to-wifi router with a standard
+SIM and appropriate data plan. e.g.
+[TP-Link TL-MR6400](https://www.amazon.co.uk/TL-MR6400-Unlocked-Configuration-Required-External/dp/B016ZWXYXG/).
+A single board linux computer (e.g. Raspberry Pi) may be appropriate in this
+case, and would save having to manage the network on an MCU.
+
+For locations without sufficient network coverage, look at options from e.g.
+[Ubiquiti](https://uisp.com/uisp-overview), which can extend wifi networks
+\>10km.
+
+For low data rates and low power, LoRa (LongRange) networking. Blues Wireless
+have a LoRa solution called
+[Sparrow](https://blues.io/products/sparrow-iot-sensor-clusters-over-lora/) that
+integrates with their notecards. Some locations may already have LoRa networks
+in place that permit new nodes to join.
+[The Things Network](https://www.thethingsnetwork.org/) has more information.
+
+Arduino offer their own [cloud](https://cloud.arduino.cc/) service. It is likely
+the fastest and easiest way to get going for projects using Arduino branded
+boards and arduino software. It provides connection management, security, Over
+The Air updates and data dashboards. It doesn't currently have support for
+4G/LTE networks, and the walled-garden approach may become limiting, e.g. if
+looking to scale to multiple devices. However, for smaller WiFi based projects
+this has a lot going for it.
+
+
+Example Project
+
+Having reviewed the options for MCU board, language, and networking it is
+possible to make some selections for the example project.
+
+* Microcontroller - Blues Wireless Swan (STM32 based)
+* Language - Circuitpython
+* Networking - 4G/LTE via Blues Wireless Notecard
+
+The Swan microcontroller board from Blues Wireless is compelling due to:
+
+* Low power design
+* Supporting the outboard DFU feature without any hardware modifications
+* The Feather form factor and Qwiic connection ports make it easy to extend
+  the functionality by connecting breakout boards or Featherwings.
+
+
 
 ### Inputs
 
@@ -198,6 +295,8 @@ For these reasons it is worth using a specialist networking card like a [Blues W
 * Initial State
 
 * Github Pages
+
+### Firmware updates
 
 ### Breakout Boards
 
