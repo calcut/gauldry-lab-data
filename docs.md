@@ -46,7 +46,7 @@ characteristics (most important first),
 * Fast development time
 * Low volume, in the order of 1 - 10 units
 * Individual or small team development
-* Cost sensitive (compared to industrial test equipment)
+* Cost sensitive (compared to industrial process control equipment)
 * Accessible to non domain experts
 * Low power consumption
 
@@ -78,7 +78,7 @@ into the microcontroller.
 
 There are a huge variety of cost optimised MCUs, but for low volume applications
 it makes sense to choose based on ease of development. Newer MCUs tend to have
-enough RAM, Flash Storage, peripherals and clock speed that the software support
+more than enough RAM, Flash Storage, peripherals and clock speed, so software support
 is likely to be more critical than the exact hardware specs.
 
 The combination of availability, community support, and capability make the
@@ -99,11 +99,13 @@ including a display, exposing more pin connections or with physical
 compatibility with particular accessory boards that plug on top (sometimes known
 as shields, HATs or featherwings)
 
+TODO - photos of boards, shields
+
 A small linux computer like a
 [Raspberry Pi 4](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/)
 is also a valid choice for many applications, particularly if dealing with
-larger volumes of data associated with audio or video, or using specific
-hardware with linux driver support. Networking capabilities are also much more
+larger volumes of data associated with audio or video, or for connecting to a
+device with linux driver support. Networking capabilities are also much more
 advanced with linux, e.g. remote login with SSH. The main downsides would be
 cost, complexity, power consumption and latency (i.e. unsuitable for controlling
 hardware that needs precise microsecond timing).
@@ -116,9 +118,9 @@ These each have their merits, and which one to choose is a subjective topic.
 
 For scientific automation, Circuitpython is a strong candidate. Typically the
 board is connected to a PC and shows up as a USB drive. The user's code exists
-as a plain text file that will run immediately after being edited. No code
+as a plain text file that will run immediately after being edited. No slow code
 compilation step is needed because the MCU is running a python interpreter to
-read the file directly. Having a short programming iteration loop is ideal for
+read the file directly. Having a short developer iteration time is ideal for
 prototyping and learning.
 
 On the other hand, Arduino (which is based on C/C++) uses a compiler and can
@@ -127,14 +129,14 @@ development time, but this more traditional paradigm gives Arduino code an
 advantage in terms of better access to all hardware functions (like interrupts),
 and execution speed (e.g. where millisecond scale timing matters).
 
-Perhaps the most critical factor is library availability (i.e. hardware drivers,
-extended software features) and documentation. Arduino and Circuitpython both
-excel in this area. For those looking to quickly integrate existing
-breakout/expansion boards, sensors, displays etc, having a library already
-written and tested will greatly reduce development time. Circuitpython is
-supported by Adafruit, a company that specialises in hobbyist electronics and
-sells a wide selection of compatible boards, all with Circuitpython drivers and
-"Learn Guides" for getting started.
+Perhaps the most critical factor is library availability (i.e. software to
+interface easily with sensor/accessory boards, or extended software features) and
+documentation. Arduino and Circuitpython both excel in this area. For those
+looking to quickly integrate existing breakout/expansion boards, sensors,
+displays etc, having a library already written and tested will greatly reduce
+development time. Circuitpython is supported by Adafruit, a company that
+specialises in hobbyist electronics and sells a wide selection of compatible
+boards, all with Circuitpython drivers and "Learn Guides" for getting started.
 
 Arduino has been established for longer so has even more libraries, with the
 majority being well supported and documented. However, certain tasks may be
